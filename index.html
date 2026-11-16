@@ -188,7 +188,7 @@
             display: flex;
             justify-content: flex-start;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         .btn-back {
@@ -205,6 +205,26 @@
 
         .btn-back:hover {
             background-color: #475569;
+        }
+
+        .rab-header-left {
+            text-align: left;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .rab-header-left h2 {
+            font-size: 15px;
+            margin: 0 0 4px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text);
+        }
+
+        .rab-header-left p {
+            font-size: 13px;
+            margin: 0;
+            color: var(--text-muted);
         }
 
         .table-responsive {
@@ -329,8 +349,10 @@
             @page { size: A4 portrait; margin: 10mm; }
             body { background: white; color: black; padding: 0; font-size: 11px; }
             .container { border: none; padding: 0; max-width: 100%; box-shadow: none; background: white; }
-            #input-page, .top-bar-result, .action-bar { display: none !important; }
+            #page-title, #input-page, .top-bar-result, .action-bar { display: none !important; }
             #result-page { display: block !important; }
+            .rab-header-left h2 { color: black !important; }
+            .rab-header-left p { color: #333 !important; }
             input::-webkit-outer-spin-button,
             input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
             input[type=number] { -moz-appearance: textfield; }
@@ -348,7 +370,7 @@
 <body>
 
 <div class="container">
-    <h1>KALKULATOR E-1</h1>
+    <h1 id="page-title">KALKULATOR E-1</h1>
 
     <div id="input-page">
         <h3>Parameter Kegiatan</h3>
@@ -392,6 +414,11 @@
             <button class="btn-back" onclick="kembaliKeInput()">← Kembali</button>
         </div>
 
+        <div class="rab-header-left">
+            <h2>RENCANA ANGGARAN BIAYA (RAB)</h2>
+            <p>Kegiatan : ..........................................</p>
+        </div>
+
         <div class="table-responsive">
             <table>
                 <thead>
@@ -421,7 +448,7 @@
 <script>
 const tarif = {
     spanduk: 400000,
-    penggandaan: 20000,
+    penggandaan: 25000,
     pptk_honor: 1000000,
     pptk_trans: 5300000,
     pptk_harian_3hr: 480000,
@@ -487,6 +514,7 @@ function prosesKeHalamanHasil() {
         return;
     }
 
+    document.getElementById('page-title').style.display = 'none';
     document.getElementById('input-page').style.display = 'none';
     document.getElementById('result-page').style.display = 'block';
     hitungRKA();
@@ -494,6 +522,7 @@ function prosesKeHalamanHasil() {
 
 function kembaliKeInput() {
     document.getElementById('result-page').style.display = 'none';
+    document.getElementById('page-title').style.display = 'block';
     document.getElementById('input-page').style.display = 'block';
 }
 
