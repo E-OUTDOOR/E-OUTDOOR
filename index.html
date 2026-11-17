@@ -10,6 +10,7 @@
             --primary-light: #334155;
             --accent: #38bdf8;
             --accent-hover: #0ea5e9;
+            --danger: #ef4444;
             --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
             --card-bg: #1e293b;
             --input-bg: #0f172a;
@@ -130,6 +131,42 @@
             box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
         }
 
+        .input-group input.input-error {
+            border-color: var(--danger) !important;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25) !important;
+        }
+
+        .error-banner {
+            display: none;
+            background-color: rgba(239, 68, 68, 0.15);
+            border: 1px solid var(--danger);
+            color: #fca5a5;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        /* Notifikasi toast di layar (pengganti alert) */
+        .toast-banner {
+            display: none;
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #991b1b;
+            color: #fef2f2;
+            border: 1px solid #f87171;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+        }
+
         .btn-enter {
             width: 100%;
             background-color: var(--accent);
@@ -155,28 +192,12 @@
             transform: translateY(0);
         }
 
-        .business-process {
-            margin-top: 20px;
-            padding-top: 16px;
-            border-top: 1px dashed var(--border);
-            font-size: 12px;
-            color: var(--text-muted);
-            text-align: left;
-        }
-
-        .business-process p {
-            margin: 0 0 6px 0;
-            font-weight: 600;
-            color: var(--text);
-        }
-
-        .business-process ul {
-            margin: 0;
-            padding-left: 18px;
-        }
-
-        .business-process li {
-            margin-bottom: 4px;
+        .btn-enter:disabled {
+            background-color: #334155;
+            color: #64748b;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
         #result-page {
@@ -227,8 +248,9 @@
             color: var(--text-muted);
         }
 
-        /* Bagian khusus yang hanya muncul saat dicetak */
-        .print-only-meta {
+        /* Elemen khusus cetak disembunyikan di layar */
+        .print-only-meta,
+        .print-only-val {
             display: none;
         }
 
@@ -309,7 +331,22 @@
             margin: 0 auto;
         }
 
-        .price-input:focus {
+        .vol-input {
+            width: 56px;
+            padding: 5px 4px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            text-align: center;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent);
+            display: inline-block;
+            margin: 0 auto;
+        }
+
+        .price-input:focus, .vol-input:focus {
             outline: none;
             border-color: var(--border-focus);
             background: #1e293b;
@@ -348,115 +385,315 @@
             table { font-size: 11px; }
             th, td { padding: 8px 10px; }
             .price-input { max-width: 105px; font-size: 11px; }
+            .vol-input { width: 48px; font-size: 11px; }
         }
 
+        /* =========================================================
+           ATURAN TAMPILAN CETAK (PRINT LAYOUT) - DOKUMEN RAB RESMI
+           ========================================================= */
         @media print {
-            @page { size: A4 portrait; margin: 10mm; }
-            body { background: white; color: black; padding: 0; font-size: 11px; }
-            .container { border: none; padding: 0; max-width: 100%; box-shadow: none; background: white; }
-            #page-title, #input-page, .top-bar-result, .action-bar { display: none !important; }
-            #result-page { display: block !important; }
-            .rab-header-left { margin-bottom: 8px; }
-            .rab-header-left h2 { color: black !important; }
-            .rab-header-left p { color: #000 !important; }
-            
-            /* Styling Garis, Parameter, dan Proses Bisnis saat dicetak */
-            .print-only-meta {
-                display: block !important;
-                border-top: 2px solid #000;
-                padding-top: 8px;
-                margin-bottom: 12px;
-                color: #000;
-                font-size: 10px;
-            }
-            .print-meta-grid {
-                display: flex;
-                justify-content: space-between;
-                gap: 20px;
-            }
-            .print-meta-col {
-                flex: 1;
-            }
-            .print-meta-title {
-                font-weight: 700;
-                text-transform: uppercase;
-                margin-bottom: 4px;
-                font-size: 10px;
-                text-decoration: underline;
-            }
-            .print-param-table {
-                width: 100%;
-                min-width: unset !important;
-                border-collapse: collapse;
-                font-size: 10px;
-            }
-            .print-param-table td {
-                border: none !important;
-                padding: 1px 4px 1px 0 !important;
-                color: #000 !important;
-            }
-            .print-bp-list {
-                margin: 0;
-                padding-left: 16px;
-            }
-            .print-bp-list li {
-                margin-bottom: 2px;
+            @page {
+                size: A4 portrait;
+                margin: 9mm 10mm;
             }
 
-            input::-webkit-outer-spin-button,
-            input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-            input[type=number] { -moz-appearance: textfield; }
-            .price-input { border: none; background: transparent; color: #000; padding: 0; width: auto; text-align: right; }
-            .table-responsive { overflow: visible; border: none; box-shadow: none; background: white; }
-            table { font-size: 10px; color: black; min-width: 100%; }
-            th { background-color: #1e3a5f !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .group-row { background-color: #e2e8f0 !important; color: black !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .subtotal-row { background-color: #f1f5f9 !important; color: black !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .total-row { background-color: #d9e2ec !important; color: black !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            th, td { border: 1px solid #94a3b8; padding: 4px 6px; }
+            * {
+                transition: none !important;
+                box-shadow: none !important;
+            }
+
+            body {
+                background: #ffffff !important;
+                color: #000000 !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                font-size: 9.5pt !important;
+                line-height: 1.25 !important;
+                min-height: auto !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .container {
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                max-width: 100% !important;
+                width: 100% !important;
+                background: #ffffff !important;
+                border-radius: 0 !important;
+            }
+
+            #page-title,
+            #input-page,
+            .top-bar-result,
+            .action-bar,
+            .toast-banner,
+            .screen-only-input {
+                display: none !important;
+            }
+
+            #result-page {
+                display: block !important;
+                width: 100% !important;
+            }
+
+            /* Tampilkan span angka terformat (pemisah ribuan & persen) saat cetak */
+            .print-only-val {
+                display: inline !important;
+                color: #000000 !important;
+                font-variant-numeric: tabular-nums;
+            }
+
+            /* Header Judul RAB */
+            .rab-header-left {
+                margin-bottom: 6px !important;
+                padding-bottom: 4px !important;
+                border-bottom: 1.5px solid #000000 !important;
+            }
+
+            .rab-header-left h2 {
+                color: #000000 !important;
+                font-size: 12pt !important;
+                font-weight: 700 !important;
+                margin: 0 0 2px 0 !important;
+                letter-spacing: 0.3px !important;
+            }
+
+            .rab-header-left p {
+                color: #000000 !important;
+                font-size: 9.5pt !important;
+                font-weight: 600 !important;
+                margin: 0 !important;
+            }
+
+            /* Bagian Metadata Parameter & Proses Bisnis */
+            .print-only-meta {
+                display: block !important;
+                padding-top: 2px !important;
+                margin-bottom: 8px !important;
+                color: #000000 !important;
+                font-size: 8.5pt !important;
+            }
+
+            .print-meta-grid {
+                display: flex !important;
+                justify-content: flex-start !important;
+                align-items: flex-start !important;
+                gap: 48px !important;
+            }
+
+            .print-meta-col-param {
+                flex: 0 0 auto !important;
+                min-width: 220px !important;
+            }
+
+            .print-meta-col-bp {
+                flex: 1 1 auto !important;
+            }
+
+            .print-meta-title {
+                font-weight: 700 !important;
+                text-transform: uppercase !important;
+                margin-bottom: 3px !important;
+                font-size: 8.5pt !important;
+                text-decoration: underline !important;
+                color: #000000 !important;
+            }
+
+            .print-param-table {
+                width: auto !important;
+                min-width: 0 !important;
+                table-layout: auto !important;
+                border-collapse: collapse !important;
+                font-size: 8.5pt !important;
+            }
+
+            .print-param-table td {
+                border: none !important;
+                padding: 1px 0 !important;
+                color: #000000 !important;
+                line-height: 1.25 !important;
+                white-space: nowrap !important;
+            }
+
+            .print-param-label {
+                width: 108px !important;
+                padding-right: 4px !important;
+            }
+
+            .print-param-colon {
+                width: 10px !important;
+                text-align: center !important;
+            }
+
+            .print-param-value {
+                padding-left: 2px !important;
+                font-weight: 600 !important;
+            }
+
+            .print-bp-list {
+                margin: 0 !important;
+                padding-left: 15px !important;
+                line-height: 1.35 !important;
+            }
+
+            .print-bp-list li {
+                margin-bottom: 1px !important;
+                color: #000000 !important;
+            }
+
+            /* Tabel Utama RAB */
+            .table-responsive {
+                overflow: visible !important;
+                border: none !important;
+                border-radius: 0 !important;
+                margin-bottom: 0 !important;
+                background: #ffffff !important;
+            }
+
+            table.rab-main-table {
+                width: 100% !important;
+                min-width: 100% !important;
+                table-layout: fixed !important;
+                border-collapse: collapse !important;
+                font-size: 8.2pt !important;
+                color: #000000 !important;
+                white-space: normal !important;
+                font-variant-numeric: tabular-nums;
+            }
+
+            /* Proporsi Kolom Seimbang untuk Kertas A4 Portrait */
+            table.rab-main-table col.col-no     { width: 4.5% !important; }
+            table.rab-main-table col.col-uraian { width: 32.5% !important; }
+            table.rab-main-table col.col-vol1   { width: 5.5% !important; }
+            table.rab-main-table col.col-sat1   { width: 6.5% !important; }
+            table.rab-main-table col.col-vol2   { width: 5.5% !important; }
+            table.rab-main-table col.col-sat2   { width: 7.0% !important; }
+            table.rab-main-table col.col-total  { width: 6.0% !important; }
+            table.rab-main-table col.col-satuan { width: 7.5% !important; }
+            table.rab-main-table col.col-harga  { width: 11.5% !important; }
+            table.rab-main-table col.col-jumlah { width: 13.5% !important; }
+
+            table.rab-main-table th,
+            table.rab-main-table td {
+                border: 1px solid #64748b !important;
+                padding: 2.5px 4px !important;
+                line-height: 1.2 !important;
+                vertical-align: middle !important;
+                overflow-wrap: break-word !important;
+            }
+
+            table.rab-main-table th {
+                background-color: #1e3a5f !important;
+                color: #ffffff !important;
+                font-size: 7.8pt !important;
+                font-weight: 700 !important;
+                text-align: center !important;
+                padding: 4px 3px !important;
+                position: static !important;
+                letter-spacing: 0.2px !important;
+            }
+
+            /* Perataan Kolom Spesifik Saat Cetak */
+            table.rab-main-table td.col-center {
+                text-align: center !important;
+            }
+
+            table.rab-main-table td.col-uraian-cell {
+                text-align: left !important;
+                padding-left: 6px !important;
+            }
+
+            table.rab-main-table td.col-harga-cell,
+            table.rab-main-table td.col-jumlah-cell {
+                text-align: right !important;
+                padding-right: 6px !important;
+                white-space: nowrap !important;
+            }
+
+            .group-row {
+                background-color: #e2e8f0 !important;
+                color: #000000 !important;
+                font-weight: 700 !important;
+            }
+
+            .group-row td {
+                padding-top: 3px !important;
+                padding-bottom: 3px !important;
+            }
+
+            .subtotal-row {
+                background-color: #f1f5f9 !important;
+                color: #000000 !important;
+                font-weight: 700 !important;
+            }
+
+            .subtotal-row td.subtotal-label {
+                text-align: right !important;
+                padding-right: 8px !important;
+            }
+
+            .total-row {
+                background-color: #cbd5e1 !important;
+                color: #000000 !important;
+                font-weight: 700 !important;
+                font-size: 8.8pt !important;
+            }
+
+            .total-row td {
+                border-top: 1.5px solid #000000 !important;
+                border-bottom: 1.5px solid #000000 !important;
+                padding: 4px 6px !important;
+            }
+
+            .total-row td.total-label {
+                text-align: right !important;
+                padding-right: 8px !important;
+            }
+
+            tr {
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }
         }
     </style>
 </head>
 <body>
+
+<div id="toast-msg" class="toast-banner"></div>
 
 <div class="container">
     <h1 id="page-title">KALKULATOR E-1</h1>
 
     <div id="input-page">
         <h3>Parameter Kegiatan</h3>
+        <div id="error-msg" class="error-banner">Semua parameter wajib diisi</div>
+
         <div class="grid-inputs-vertical">
             <div class="input-group">
                 <label>Peserta</label>
-                <input type="number" id="p_peserta" value="" min="1">
+                <input type="number" id="p_peserta" value="" min="1" placeholder="" oninput="cekStatusInput()" onkeydown="cekTombolEnter(event)">
             </div>
-            <div class="input-group">
+            <div class="input-group" style="display: none;">
                 <label>Pemateri</label>
-                <input type="number" id="p_pemateri" value="" min="1">
+                <input type="number" id="p_pemateri" value="1">
             </div>
             <div class="input-group">
                 <label>Anggota / Panitia</label>
-                <input type="number" id="p_panitia" value="" min="1">
+                <input type="number" id="p_panitia" value="" min="1" placeholder="" oninput="cekStatusInput()" onkeydown="cekTombolEnter(event)">
             </div>
             <div class="input-group">
                 <label>Durasi Pelatihan</label>
-                <input type="number" id="p_hari" value="" min="1" oninput="updateJPOtomatis()">
+                <input type="number" id="p_hari" value="" min="1" placeholder="" oninput="updateJPOtomatis(); cekStatusInput();" onkeydown="cekTombolEnter(event)">
             </div>
             <div class="input-group">
                 <label>Total JP Pemateri</label>
-                <input type="number" id="p_jp" value="" min="1">
+                <input type="number" id="p_jp" value="" min="1" placeholder="" oninput="cekStatusInput()" onkeydown="cekTombolEnter(event)">
             </div>
         </div>
         
-        <button class="btn-enter" onclick="prosesKeHalamanHasil()">ENTER</button>
-
-        <div class="business-process">
-            <p>Proses bisnis:</p>
-            <ul>
-                <li>PPTK konsultasi 2 hari</li>
-                <li>PPTK & Anggota persiapan 1 hari</li>
-                <li>Hari Kegiatan</li>
-            </ul>
-        </div>
+        <button id="btn-submit" class="btn-enter" onclick="prosesKeHalamanHasil()">ENTER</button>
     </div>
 
     <div id="result-page">
@@ -466,65 +703,56 @@
 
         <div class="rab-header-left">
             <h2>RENCANA ANGGARAN BIAYA (RAB)</h2>
-            <p>Kegiatan : ..........................................</p>
+            <p>Kegiatan : ........................................................................................................</p>
         </div>
 
-        <!-- Garis, Parameter (Termasuk PPTK & Moderator) & Proses Bisnis (Muncul saat Cetak) -->
         <div class="print-only-meta">
             <div class="print-meta-grid">
-                <div class="print-meta-col">
+                <div class="print-meta-col-param">
                     <div class="print-meta-title">Parameter</div>
                     <table class="print-param-table">
-<tr>
-                            <td>PPTK</td>
-                            <td>:</td>
-                            <td>1 Orang</td>
-                        </tr>
-
- <tr>
-                            <td>Anggota / Panitia</td>
-                            <td>:</td>
-                            <td><span id="cetak_panitia">0</span> Orang</td>
-                        </tr>
-
-
-
-
-
                         <tr>
-                            <td style="width: 130px;">Peserta</td>
-                            <td style="width: 10px;">:</td>
-                            <td><span id="cetak_peserta">0</span> Orang</td>
+                            <td class="print-param-label">PPTK</td>
+                            <td class="print-param-colon">:</td>
+                            <td class="print-param-value">1 Orang</td>
                         </tr>
                         <tr>
-                            <td>Pemateri</td>
-                            <td>:</td>
-                            <td><span id="cetak_pemateri">0</span> Orang</td>
-                        </tr>
-                       
-                        
-                        <tr>
-                            <td>Moderator / MC</td>
-                            <td>:</td>
-                            <td>1 Orang</td>
+                            <td class="print-param-label">Anggota / Panitia</td>
+                            <td class="print-param-colon">:</td>
+                            <td class="print-param-value"><span id="cetak_panitia">0</span> Orang</td>
                         </tr>
                         <tr>
-                            <td>Durasi Pelatihan</td>
-                            <td>:</td>
-                            <td><span id="cetak_hari">0</span> Hari</td>
+                            <td class="print-param-label">Peserta</td>
+                            <td class="print-param-colon">:</td>
+                            <td class="print-param-value"><span id="cetak_peserta">0</span> Orang</td>
                         </tr>
                         <tr>
-                            <td>Total JP Pemateri</td>
-                            <td>:</td>
-                            <td><span id="cetak_jp">0</span> JP</td>
+                            <td class="print-param-label">Pemateri</td>
+                            <td class="print-param-colon">:</td>
+                            <td class="print-param-value"><span id="cetak_pemateri">1</span> Orang</td>
+                        </tr>
+                        <tr>
+                            <td class="print-param-label">Moderator / MC</td>
+                            <td class="print-param-colon">:</td>
+                            <td class="print-param-value">1 Orang</td>
+                        </tr>
+                        <tr>
+                            <td class="print-param-label">Durasi Pelatihan</td>
+                            <td class="print-param-colon">:</td>
+                            <td class="print-param-value"><span id="cetak_hari">0</span> Hari</td>
+                        </tr>
+                        <tr>
+                            <td class="print-param-label">Total JP Pemateri</td>
+                            <td class="print-param-colon">:</td>
+                            <td class="print-param-value"><span id="cetak_jp">0</span> JP</td>
                         </tr>
                     </table>
                 </div>
-                <div class="print-meta-col">
+                <div class="print-meta-col-bp">
                     <div class="print-meta-title">Proses Bisnis</div>
                     <ul class="print-bp-list">
                         <li>PPTK konsultasi 2 hari</li>
-                        <li>PPTK & Anggota persiapan 1 hari</li>
+                        <li>PPTK &amp; Anggota persiapan 1 hari</li>
                         <li>Hari Kegiatan</li>
                     </ul>
                 </div>
@@ -532,19 +760,31 @@
         </div>
 
         <div class="table-responsive">
-            <table>
+            <table class="rab-main-table">
+                <colgroup>
+                    <col class="col-no" style="width: 6%;">
+                    <col class="col-uraian" style="width: 38%;">
+                    <col class="col-vol1" style="width: 6%;">
+                    <col class="col-sat1" style="width: 5%;">
+                    <col class="col-vol2" style="width: 6%;">
+                    <col class="col-sat2" style="width: 5%;">
+                    <col class="col-total" style="width: 7%;">
+                    <col class="col-satuan" style="width: 6%;">
+                    <col class="col-harga" style="width: 12%;">
+                    <col class="col-jumlah" style="width: 13%;">
+                </colgroup>
                 <thead>
                     <tr>
-                        <th style="width: 6%;">No.</th>
-                        <th style="width: 38%;">Uraian</th>
-                        <th style="width: 6%;">Vol 1</th>
-                        <th style="width: 5%;">Sat 1</th>
-                        <th style="width: 6%;">Vol 2</th>
-                        <th style="width: 5%;">Sat 2</th>
-                        <th style="width: 7%;">Total</th>
-                        <th style="width: 6%;">Satuan</th>
-                        <th style="width: 12%;">Harga</th>
-                        <th style="width: 13%;">Jumlah (Rp)</th>
+                        <th>No.</th>
+                        <th>Uraian</th>
+                        <th>Vol 1</th>
+                        <th>Sat 1</th>
+                        <th>Vol 2</th>
+                        <th>Sat 2</th>
+                        <th>Total</th>
+                        <th>Satuan</th>
+                        <th>Harga</th>
+                        <th>Jumlah (Rp)</th>
                     </tr>
                 </thead>
                 <tbody id="rka-body"></tbody>
@@ -586,17 +826,49 @@ const tarif = {
     lain_persen: 5
 };
 
+const volManual = {
+    pptk_trans_kali: 2,
+    pptk_harian_hari: 3,
+    pptk_hotel_malam: 3,
+    pemateri_trans_kali: 1,
+    pemateri_hotel_hari: 0,
+    pan_trans_org: 0,
+    pan_hotel_org: 0,
+    pan_harian_org: 0
+};
+
+let toastTimer = null;
+function tampilkanPesan(teks) {
+    const toast = document.getElementById('toast-msg');
+    toast.textContent = teks;
+    toast.style.display = 'block';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+        toast.style.display = 'none';
+    }, 3000);
+}
+
 function formatRupiah(angka) {
     return new Intl.NumberFormat('id-ID').format(Math.round(angka));
+}
+
+function ubahVol(key, val) {
+    let nilai = parseFloat(val);
+    if (isNaN(nilai) || nilai < 0) {
+        nilai = 0;
+    }
+    volManual[key] = nilai;
+    hitungRKA();
 }
 
 function ubahTarif(key, val) {
     let nilai = parseFloat(val) || 0;
     if (key === 'lain_persen') {
         if (nilai > 25) {
-            alert('Nilai maksimal adalah 25%');
+            tampilkanPesan('Nilai maksimal belanja lain-lain adalah 25%');
             nilai = 25;
-            document.getElementById('input_lain_persen').value = 25;
+            const inputPersen = document.getElementById('input_lain_persen');
+            if (inputPersen) inputPersen.value = 25;
         } else if (nilai < 0) {
             nilai = 0;
         }
@@ -607,26 +879,79 @@ function ubahTarif(key, val) {
 
 function updateJPOtomatis() {
     const hari = document.getElementById('p_hari').value;
-    if (hari === "" || parseInt(hari) < 0) {
+    if (hari === "" || parseInt(hari) <= 0) {
         document.getElementById('p_jp').value = "";
     } else {
         document.getElementById('p_jp').value = parseInt(hari) * 8;
     }
 }
 
+function cekStatusInput() {
+    const daftarId = ['p_peserta', 'p_panitia', 'p_hari', 'p_jp'];
+    let semuaValid = true;
+
+    daftarId.forEach(id => {
+        const el = document.getElementById(id);
+        const nilai = parseInt(el.value);
+        if (el.value.trim() === "" || isNaN(nilai) || nilai <= 0) {
+            semuaValid = false;
+        } else {
+            el.classList.remove('input-error');
+        }
+    });
+
+    if (semuaValid) {
+        document.getElementById('error-msg').style.display = 'none';
+    }
+    return semuaValid;
+}
+
+function cekTombolEnter(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        prosesKeHalamanHasil();
+    }
+}
+
 function prosesKeHalamanHasil() {
+    const daftarId = ['p_peserta', 'p_panitia', 'p_hari', 'p_jp'];
+    let inputKosongPertama = null;
+
+    daftarId.forEach(id => {
+        const el = document.getElementById(id);
+        const nilai = parseInt(el.value);
+        if (el.value.trim() === "" || isNaN(nilai) || nilai <= 0) {
+            el.classList.add('input-error');
+            if (!inputKosongPertama) {
+                inputKosongPertama = el;
+            }
+        } else {
+            el.classList.remove('input-error');
+        }
+    });
+
+    if (inputKosongPertama) {
+        document.getElementById('error-msg').style.display = 'block';
+        inputKosongPertama.focus();
+        return;
+    }
+
     const peserta = document.getElementById('p_peserta').value;
-    const pemateri = document.getElementById('p_pemateri').value;
+    const pemateri = 1; 
     const panitia = document.getElementById('p_panitia').value;
     const hari = document.getElementById('p_hari').value;
     const jp = document.getElementById('p_jp').value;
 
-    if (peserta === "" || pemateri === "" || panitia === "" || hari === "" || jp === "") {
-        alert("Mohon isi semua parameter terlebih dahulu!");
-        return;
-    }
+    const jmlPemateri = pemateri;
+    const jmlHari = parseInt(hari) || 0;
+    volManual.pemateri_trans_kali = jmlPemateri > 0 ? 1 : 0;
+    volManual.pemateri_hotel_hari = jmlHari;
 
-    // Mengisi nilai parameter ke tampilan cetak
+    const jmlPanitia = parseInt(panitia) || 0;
+    volManual.pan_trans_org = jmlPanitia;
+    volManual.pan_hotel_org = jmlPanitia;
+    volManual.pan_harian_org = jmlPanitia;
+
     document.getElementById('cetak_peserta').textContent = peserta;
     document.getElementById('cetak_pemateri').textContent = pemateri;
     document.getElementById('cetak_panitia').textContent = panitia;
@@ -645,9 +970,25 @@ function kembaliKeInput() {
     document.getElementById('input-page').style.display = 'block';
 }
 
+/* Helper membuat sel input harga dengan span terformat khusus cetak */
+function renderSelHarga(key, nilai) {
+    return `<td class="text-center col-harga-cell">` +
+           `<input type="number" class="price-input screen-only-input" value="${nilai}" oninput="ubahTarif('${key}', this.value)">` +
+           `<span class="print-only-val">${formatRupiah(nilai)}</span>` +
+           `</td>`;
+}
+
+/* Helper membuat sel input volume dengan span rata tengah khusus cetak */
+function renderSelVol(key, nilai) {
+    return `<td class="text-center col-center">` +
+           `<input type="number" class="vol-input screen-only-input" min="0" value="${nilai}" oninput="ubahVol('${key}', this.value)">` +
+           `<span class="print-only-val">${nilai}</span>` +
+           `</td>`;
+}
+
 function hitungRKA() {
     const peserta = parseInt(document.getElementById('p_peserta').value) || 0;
-    const pemateri = parseInt(document.getElementById('p_pemateri').value) || 0;
+    const pemateri = 1; 
     const panitia = parseInt(document.getElementById('p_panitia').value) || 0;
     const hari = parseInt(document.getElementById('p_hari').value) || 0;
     const jp = parseInt(document.getElementById('p_jp').value) || 0;
@@ -662,18 +1003,25 @@ function hitungRKA() {
     const c_penggandaan = totalPenggandaan * tarif.penggandaan;
     const totalBarangCetak = c_spanduk + c_penggandaan;
 
+    const tot_pptk_trans = pptk * volManual.pptk_trans_kali;
+    const tot_pptk_harian3 = pptk * volManual.pptk_harian_hari;
+    const tot_pptk_hotel3 = pptk * volManual.pptk_hotel_malam;
+
     const c_pptk_honor = pptk * tarif.pptk_honor;
-    const c_pptk_trans = (pptk * 2) * tarif.pptk_trans;
-    const c_pptk_harian3 = (pptk * 3) * tarif.pptk_harian_3hr;
-    const c_pptk_hotel3 = (pptk * 3) * tarif.pptk_hotel_3hr;
+    const c_pptk_trans = tot_pptk_trans * tarif.pptk_trans;
+    const c_pptk_harian3 = tot_pptk_harian3 * tarif.pptk_harian_3hr;
+    const c_pptk_hotel3 = tot_pptk_hotel3 * tarif.pptk_hotel_3hr;
     const c_pptk_harian_fb = (pptk * hari) * tarif.pptk_harian_fb;
     const c_pptk_hotel_fb = (pptk * hari) * tarif.pptk_hotel_fb;
     const totalBelanjaPPTK = c_pptk_honor + c_pptk_trans + c_pptk_harian3 + c_pptk_hotel3 + c_pptk_harian_fb + c_pptk_hotel_fb;
 
     const t_pemateri = pemateri * jp;
+    const tot_pemateri_trans = pemateri * volManual.pemateri_trans_kali;
+    const tot_pemateri_hotel = pemateri * volManual.pemateri_hotel_hari;
+
     const c_pemateri_honor = t_pemateri * tarif.pemateri_honor;
-    const c_pemateri_trans = pemateri * tarif.pemateri_trans;
-    const c_pemateri_hotel = (pemateri * hari) * tarif.pemateri_hotel;
+    const c_pemateri_trans = tot_pemateri_trans * tarif.pemateri_trans;
+    const c_pemateri_hotel = tot_pemateri_hotel * tarif.pemateri_hotel;
     const totalBelanjaNarasumber = c_pemateri_honor + c_pemateri_trans + c_pemateri_hotel;
 
     const c_mc_honor = mc * tarif.mc_honor;
@@ -681,10 +1029,15 @@ function hitungRKA() {
     const c_mc_hotel = (mc * hari) * tarif.mc_hotel;
     const totalBelanjaMC = c_mc_honor + c_mc_trans + c_mc_hotel;
 
+    const pan_trans_kali = volManual.pan_trans_org > 0 ? 1 : 0;
+    const tot_pan_trans = volManual.pan_trans_org * pan_trans_kali;
+    const tot_pan_hotel1 = volManual.pan_hotel_org * 1;
+    const tot_pan_harian1 = volManual.pan_harian_org * 1;
+
     const c_pan_honor = panitia * tarif.panitia_honor;
-    const c_pan_trans = panitia * tarif.panitia_trans;
-    const c_pan_hotel1 = (panitia * 1) * tarif.panitia_hotel_1hr;
-    const c_pan_harian1 = (panitia * 1) * tarif.panitia_harian_1hr;
+    const c_pan_trans = tot_pan_trans * tarif.panitia_trans;
+    const c_pan_hotel1 = tot_pan_hotel1 * tarif.panitia_hotel_1hr;
+    const c_pan_harian1 = tot_pan_harian1 * tarif.panitia_harian_1hr;
     const c_pan_harian_fb = (panitia * hari) * tarif.panitia_harian_fb;
     const c_pan_paket_fb = (panitia * hari) * tarif.panitia_hotel_fb;
     const totalBelanjaPanitia = c_pan_honor + c_pan_trans + c_pan_hotel1 + c_pan_harian1 + c_pan_harian_fb + c_pan_paket_fb;
@@ -703,292 +1056,295 @@ function hitungRKA() {
 
     const html = `
         <tr class="group-row">
-            <td class="text-center">1</td>
-            <td colspan="9">BARANG CETAK</td>
+            <td class="text-center col-center">1</td>
+            <td colspan="9" class="col-uraian-cell">BARANG CETAK</td>
         </tr>
         <tr>
-            <td class="text-center">1.1</td>
-            <td>Spanduk</td>
-            <td class="text-center">${adaKegiatan}</td><td class="text-center">Buah</td>
-            <td class="text-center">${adaKegiatan}</td><td class="text-center">Keg</td>
-            <td class="text-center">${adaKegiatan}</td><td class="text-center">Buah</td>
-            <td class="text-center"><input type="number" class="price-input" value="${tarif.spanduk}" onchange="ubahTarif('spanduk', this.value)"></td>
-            <td class="text-right"><b>Rp ${formatRupiah(c_spanduk)}</b></td>
+            <td class="text-center col-center">1.1</td>
+            <td class="col-uraian-cell">Spanduk</td>
+            <td class="text-center col-center">${adaKegiatan}</td><td class="text-center col-center">Buah</td>
+            <td class="text-center col-center">${adaKegiatan}</td><td class="text-center col-center">Keg</td>
+            <td class="text-center col-center">${adaKegiatan}</td><td class="text-center col-center">Buah</td>
+            ${renderSelHarga('spanduk', tarif.spanduk)}
+            <td class="text-right col-jumlah-cell"><b>Rp ${formatRupiah(c_spanduk)}</b></td>
         </tr>
         <tr>
-            <td class="text-center">1.2</td>
-            <td>Penggandaan</td>
-            <td class="text-center">${totalPenggandaan}</td><td class="text-center">Org</td>
-            <td class="text-center">${totalPenggandaan > 0 ? 1 : 0}</td><td class="text-center">Paket</td>
-            <td class="text-center">${totalPenggandaan}</td><td class="text-center">Paket</td>
-            <td class="text-center"><input type="number" class="price-input" value="${tarif.penggandaan}" onchange="ubahTarif('penggandaan', this.value)"></td>
-            <td class="text-right"><b>Rp ${formatRupiah(c_penggandaan)}</b></td>
+            <td class="text-center col-center">1.2</td>
+            <td class="col-uraian-cell">Penggandaan</td>
+            <td class="text-center col-center">${totalPenggandaan}</td><td class="text-center col-center">Org</td>
+            <td class="text-center col-center">${totalPenggandaan > 0 ? 1 : 0}</td><td class="text-center col-center">Paket</td>
+            <td class="text-center col-center">${totalPenggandaan}</td><td class="text-center col-center">Paket</td>
+            ${renderSelHarga('penggandaan', tarif.penggandaan)}
+            <td class="text-right col-jumlah-cell"><b>Rp ${formatRupiah(c_penggandaan)}</b></td>
         </tr>
         <tr class="subtotal-row">
-            <td colspan="9" class="text-right">SUB TOTAL 1</td>
-            <td class="text-right">Rp ${formatRupiah(totalBarangCetak)}</td>
+            <td colspan="9" class="text-right subtotal-label">SUB TOTAL 1</td>
+            <td class="text-right col-jumlah-cell">Rp ${formatRupiah(totalBarangCetak)}</td>
         </tr>
 
         <tr class="group-row">
-            <td class="text-center">2</td>
-            <td colspan="9">BELANJA PPTK</td>
+            <td class="text-center col-center">2</td>
+            <td colspan="9" class="col-uraian-cell">BELANJA PPTK</td>
         </tr>
         <tr>
-            <td class="text-center">2.1</td>
-            <td>Honorarium</td>
-            <td class="text-center">${pptk}</td><td class="text-center">Org</td>
-            <td class="text-center">1</td><td class="text-center">Keg</td>
-            <td class="text-center">${pptk}</td><td class="text-center">OK</td>
-            <td class="text-center"><input type="number" class="price-input" value="${tarif.pptk_honor}" onchange="ubahTarif('pptk_honor', this.value)"></td>
-            <td class="text-right"><b>Rp ${formatRupiah(c_pptk_honor)}</b></td>
+            <td class="text-center col-center">2.1</td>
+            <td class="col-uraian-cell">Honorarium</td>
+            <td class="text-center col-center">${pptk}</td><td class="text-center col-center">Org</td>
+            <td class="text-center col-center">1</td><td class="text-center col-center">Keg</td>
+            <td class="text-center col-center">${pptk}</td><td class="text-center col-center">OK</td>
+            ${renderSelHarga('pptk_honor', tarif.pptk_honor)}
+            <td class="text-right col-jumlah-cell"><b>Rp ${formatRupiah(c_pptk_honor)}</b></td>
         </tr>
         <tr>
-            <td class="text-center">2.2</td>
-            <td>Transportasi</td>
-            <td class="text-center">${pptk}</td><td class="text-center">Org</td>
-            <td class="text-center">2</td><td class="text-center">Kali</td>
-            <td class="text-center">${pptk * 2}</td><td class="text-center">PP</td>
-            <td class="text-center"><input type="number" class="price-input" value="${tarif.pptk_trans}" onchange="ubahTarif('pptk_trans', this.value)"></td>
-            <td class="text-right"><b>Rp ${formatRupiah(c_pptk_trans)}</b></td>
+            <td class="text-center col-center">2.2</td>
+            <td class="col-uraian-cell">Transportasi</td>
+            <td class="text-center col-center">${pptk}</td><td class="text-center col-center">Org</td>
+            ${renderSelVol('pptk_trans_kali', volManual.pptk_trans_kali)}<td class="text-center col-center">Kali</td>
+            <td class="text-center col-center">${tot_pptk_trans}</td><td class="text-center col-center">PP</td>
+            ${renderSelHarga('pptk_trans', tarif.pptk_trans)}
+            <td class="text-right col-jumlah-cell"><b>Rp ${formatRupiah(c_pptk_trans)}</b></td>
         </tr>
         <tr>
-            <td class="text-center">2.3</td>
-            <td>Uang Harian</td>
-            <td class="text-center">${pptk}</td><td class="text-center">Org</td>
-            <td class="text-center">3</td><td class="text-center">Hari</td>
-            <td class="text-center">${pptk * 3}</td><td class="text-center">OH</td>
-            <td class="text-center"><input type="number" class="price-input" value="${tarif.pptk_harian_3hr}" onchange="ubahTarif('pptk_harian_3hr', this.value)"></td>
-            <td class="text-right"><b>Rp ${formatRupiah(c_pptk_harian3)}</b></td>
+            <td class="text-center col-center">2.3</td>
+            <td class="col-uraian-cell">Uang Harian</td>
+            <td class="text-center col-center">${pptk}</td><td class="text-center col-center">Org</td>
+            ${renderSelVol('pptk_harian_hari', volManual.pptk_harian_hari)}<td class="text-center col-center">Hari</td>
+            <td class="text-center col-center">${tot_pptk_harian3}</td><td class="text-center col-center">OH</td>
+            ${renderSelHarga('pptk_harian_3hr', tarif.pptk_harian_3hr)}
+            <td class="text-right col-jumlah-cell"><b>Rp ${formatRupiah(c_pptk_harian3)}</b></td>
         </tr>
         <tr>
-            <td class="text-center">2.4</td>
-            <td>Uang Hotel</td>
-            <td class="text-center">${pptk}</td><td class="text-center">Org</td>
-            <td class="text-center">3</td><td class="text-center">Malam</td>
-            <td class="text-center">${pptk * 3}</td><td class="text-center">OP</td>
-            <td class="text-center"><input type="number" class="price-input" value="${tarif.pptk_hotel_3hr}" onchange="ubahTarif('pptk_hotel_3hr', this.value)"></td>
-            <td class="text-right"><b>Rp ${formatRupiah(c_pptk_hotel3)}</b></td>
+            <td class="text-center col-center">2.4</td>
+            <td class="col-uraian-cell">Uang Hotel</td>
+            <td class="text-center col-center">${pptk}</td><td class="text-center col-center">Org</td>
+            ${renderSelVol('pptk_hotel_malam', volManual.pptk_hotel_malam)}<td class="text-center col-center">Malam</td>
+            <td class="text-center col-center">${tot_pptk_hotel3}</td><td class="text-center col-center">OP</td>
+            ${renderSelHarga('pptk_hotel_3hr', tarif.pptk_hotel_3hr)}
+            <td class="text-right col-jumlah-cell"><b>Rp ${formatRupiah(c_pptk_hotel3)}</b></td>
         </tr>
         <tr>
-            <td class="text-center">2.5</td>
-            <td>Uang Harian Fullboard</td>
-            <td class="text-center">${pptk}</td><td class="text-center">Org</td>
-            <td class="text-center">${hari}</td><td class="text-center">Hari</td>
-            <td class="text-center">${pptk * hari}</td><td class="text-center">OH</td>
-            <td class="text-center"><input type="number" class="price-input" value="${tarif.pptk_harian_fb}" onchange="ubahTarif('pptk_harian_fb', this.value)"></td>
-            <td class="text-right"><b>Rp ${formatRupiah(c_pptk_harian_fb)}</b></td>
+            <td class="text-center col-center">2.5</td>
+            <td class="col-uraian-cell">Uang Harian Fullboard</td>
+            <td class="text-center col-center">${pptk}</td><td class="text-center col-center">Org</td>
+            <td class="text-center col-center">${hari}</td><td class="text-center col-center">Hari</td>
+            <td class="text-center col-center">${pptk * hari}</td><td class="text-center col-center">OH</td>
+            ${renderSelHarga('pptk_harian_fb', tarif.pptk_harian_fb)}
+            <td class="text-right col-jumlah-cell"><b>Rp ${formatRupiah(c_pptk_harian_fb)}</b></td>
         </tr>
         <tr>
-            <td class="text-center">2.6</td>
-            <td>Paket Rapat Fullboard</td>
-            <td class="text-center">${pptk}</td><td class="text-center">Org</td>
-            <td class="text-center">${hari}</td><td class="text-center">Malam</td>
-            <td class="text-center">${pptk * hari}</td><td class="text-center">OP</td>
-            <td class="text-center"><input type="number" class="price-input" value="${tarif.pptk_hotel_fb}" onchange="ubahTarif('pptk_hotel_fb', this.value)"></td>
-            <td class="text-right"><b>Rp ${formatRupiah(c_pptk_hotel_fb)}</b></td>
+            <td class="text-center col-center">2.6</td>
+            <td class="col-uraian-cell">Paket Rapat Fullboard</td>
+            <td class="text-center col-center">${pptk}</td><td class="text-center col-center">Org</td>
+            <td class="text-center col-center">${hari}</td><td class="text-center col-center">Malam</td>
+            <td class="text-center col-center">${pptk * hari}</td><td class="text-center col-center">OP</td>
+            ${renderSelHarga('pptk_hotel_fb', tarif.pptk_hotel_fb)}
+            <td class="text-right col-jumlah-cell"><b>Rp ${formatRupiah(c_pptk_hotel_fb)}</b></td>
         </tr>
         <tr class="subtotal-row">
-            <td colspan="9" class="text-right">SUB TOTAL 2</td>
-            <td class="text-right">Rp ${formatRupiah(totalBelanjaPPTK)}</td>
+            <td colspan="9" class="text-right subtotal-label">SUB TOTAL 2</td>
+            <td class="text-right col-jumlah-cell">Rp ${formatRupiah(totalBelanjaPPTK)}</td>
         </tr>
 
         <tr class="group-row">
-            <td class="text-center">3</td>
-            <td colspan="9">BELANJA NARASUMBER</td>
+            <td class="text-center col-center">3</td>
+            <td colspan="9" class="col-uraian-cell">BELANJA NARASUMBER</td>
         </tr>
         <tr>
-            <td class="text-center">3.1</td>
-            <td>Honorarium</td>
-            <td class="text-center">${pemateri}</td><td class="text-center">Org</td>
-            <td class="text-center">${jp}</td><td class="text-center">JP</td>
-            <td class="text-center">${t_pemateri}</td><td class="text-center">OJ</td>
-            <td class="text-center"><input type="number" class="price-input" value="${tarif.pemateri_honor}" onchange="ubahTarif('pemateri_honor', this.value)"></td>
-            <td class="text-right"><b>Rp ${formatRupiah(c_pemateri_honor)}</b></td>
+            <td class="text-center col-center">3.1</td>
+            <td class="col-uraian-cell">Honorarium</td>
+            <td class="text-center col-center">${pemateri}</td><td class="text-center col-center">Org</td>
+            <td class="text-center col-center">${jp}</td><td class="text-center col-center">JP</td>
+            <td class="text-center col-center">${t_pemateri}</td><td class="text-center col-center">OJ</td>
+            ${renderSelHarga('pemateri_honor', tarif.pemateri_honor)}
+            <td class="text-right col-jumlah-cell"><b>Rp ${formatRupiah(c_pemateri_honor)}</b></td>
         </tr>
         <tr>
-            <td class="text-center">3.2</td>
-            <td>Transportasi</td>
-            <td class="text-center">${pemateri}</td><td class="text-center">Org</td>
-            <td class="text-center">${pemateri > 0 ? 1 : 0}</td><td class="text-center">Kali</td>
-            <td class="text-center">${pemateri}</td><td class="text-center">PP</td>
-            <td class="text-center"><input type="number" class="price-input" value="${tarif.pemateri_trans}" onchange="ubahTarif('pemateri_trans', this.value)"></td>
-            <td class="text-right"><b>Rp ${formatRupiah(c_pemateri_trans)}</b></td>
+            <td class="text-center col-center">3.2</td>
+            <td class="col-uraian-cell">Transportasi</td>
+            <td class="text-center col-center">${pemateri}</td><td class="text-center col-center">Org</td>
+            ${renderSelVol('pemateri_trans_kali', volManual.pemateri_trans_kali)}<td class="text-center col-center">Kali</td>
+            <td class="text-center col-center">${tot_pemateri_trans}</td><td class="text-center col-center">PP</td>
+            ${renderSelHarga('pemateri_trans', tarif.pemateri_trans)}
+            <td class="text-right col-jumlah-cell"><b>Rp ${formatRupiah(c_pemateri_trans)}</b></td>
         </tr>
         <tr>
-            <td class="text-center">3.3</td>
-            <td>Paket Rapat Fullboard</td>
-            <td class="text-center">${pemateri}</td><td class="text-center">Org</td>
-            <td class="text-center">${hari}</td><td class="text-center">Hari</td>
-            <td class="text-center">${pemateri * hari}</td><td class="text-center">OP</td>
-            <td class="text-center"><input type="number" class="price-input" value="${tarif.pemateri_hotel}" onchange="ubahTarif('pemateri_hotel', this.value)"></td>
-            <td class="text-right"><b>Rp ${formatRupiah(c_pemateri_hotel)}</b></td>
+            <td class="text-center col-center">3.3</td>
+            <td class="col-uraian-cell">Paket Rapat Fullboard</td>
+            <td class="text-center col-center">${pemateri}</td><td class="text-center col-center">Org</td>
+            ${renderSelVol('pemateri_hotel_hari', volManual.pemateri_hotel_hari)}<td class="text-center col-center">Hari</td>
+            <td class="text-center col-center">${tot_pemateri_hotel}</td><td class="text-center col-center">OP</td>
+            ${renderSelHarga('pemateri_hotel', tarif.pemateri_hotel)}
+            <td class="text-right col-jumlah-cell"><b>Rp ${formatRupiah(c_pemateri_hotel)}</b></td>
         </tr>
         <tr class="subtotal-row">
-            <td colspan="9" class="text-right">SUB TOTAL 3</td>
-            <td class="text-right">Rp ${formatRupiah(totalBelanjaNarasumber)}</td>
+            <td colspan="9" class="text-right subtotal-label">SUB TOTAL 3</td>
+            <td class="text-right col-jumlah-cell">Rp ${formatRupiah(totalBelanjaNarasumber)}</td>
         </tr>
 
         <tr class="group-row">
-            <td class="text-center">4</td>
-            <td colspan="9">BELANJA MODERATOR</td>
+            <td class="text-center col-center">4</td>
+            <td colspan="9" class="col-uraian-cell">BELANJA MODERATOR</td>
         </tr>
         <tr>
-            <td class="text-center">4.1</td>
-            <td>Honorarium</td>
-            <td class="text-center">${mc}</td><td class="text-center">Org</td>
-            <td class="text-center">1</td><td class="text-center">Keg</td>
-            <td class="text-center">${mc}</td><td class="text-center">OK</td>
-            <td class="text-center"><input type="number" class="price-input" value="${tarif.mc_honor}" onchange="ubahTarif('mc_honor', this.value)"></td>
-            <td class="text-right"><b>Rp ${formatRupiah(c_mc_honor)}</b></td>
+            <td class="text-center col-center">4.1</td>
+            <td class="col-uraian-cell">Honorarium</td>
+            <td class="text-center col-center">${mc}</td><td class="text-center col-center">Org</td>
+            <td class="text-center col-center">1</td><td class="text-center col-center">Keg</td>
+            <td class="text-center col-center">${mc}</td><td class="text-center col-center">OK</td>
+            ${renderSelHarga('mc_honor', tarif.mc_honor)}
+            <td class="text-right col-jumlah-cell"><b>Rp ${formatRupiah(c_mc_honor)}</b></td>
         </tr>
         <tr>
-            <td class="text-center">4.2</td>
-            <td>Transportasi</td>
-            <td class="text-center">${mc}</td><td class="text-center">Org</td>
-            <td class="text-center">1</td><td class="text-center">Kali</td>
-            <td class="text-center">${mc}</td><td class="text-center">PP</td>
-            <td class="text-center"><input type="number" class="price-input" value="${tarif.mc_trans}" onchange="ubahTarif('mc_trans', this.value)"></td>
-            <td class="text-right"><b>Rp ${formatRupiah(c_mc_trans)}</b></td>
+            <td class="text-center col-center">4.2</td>
+            <td class="col-uraian-cell">Transportasi</td>
+            <td class="text-center col-center">${mc}</td><td class="text-center col-center">Org</td>
+            <td class="text-center col-center">1</td><td class="text-center col-center">Kali</td>
+            <td class="text-center col-center">${mc}</td><td class="text-center col-center">PP</td>
+            ${renderSelHarga('mc_trans', tarif.mc_trans)}
+            <td class="text-right col-jumlah-cell"><b>Rp ${formatRupiah(c_mc_trans)}</b></td>
         </tr>
         <tr>
-            <td class="text-center">4.3</td>
-            <td>Paket Rapat Fullboard</td>
-            <td class="text-center">${mc}</td><td class="text-center">Org</td>
-            <td class="text-center">${hari}</td><td class="text-center">Malam</td>
-            <td class="text-center">${mc * hari}</td><td class="text-center">OP</td>
-            <td class="text-center"><input type="number" class="price-input" value="${tarif.mc_hotel}" onchange="ubahTarif('mc_hotel', this.value)"></td>
-            <td class="text-right"><b>Rp ${formatRupiah(c_mc_hotel)}</b></td>
+            <td class="text-center col-center">4.3</td>
+            <td class="col-uraian-cell">Paket Rapat Fullboard</td>
+            <td class="text-center col-center">${mc}</td><td class="text-center col-center">Org</td>
+            <td class="text-center col-center">${hari}</td><td class="text-center col-center">Malam</td>
+            <td class="text-center col-center">${mc * hari}</td><td class="text-center col-center">OP</td>
+            ${renderSelHarga('mc_hotel', tarif.mc_hotel)}
+            <td class="text-right col-jumlah-cell"><b>Rp ${formatRupiah(c_mc_hotel)}</b></td>
         </tr>
         <tr class="subtotal-row">
-            <td colspan="9" class="text-right">SUB TOTAL 4</td>
-            <td class="text-right">Rp ${formatRupiah(totalBelanjaMC)}</td>
+            <td colspan="9" class="text-right subtotal-label">SUB TOTAL 4</td>
+            <td class="text-right col-jumlah-cell">Rp ${formatRupiah(totalBelanjaMC)}</td>
         </tr>
 
         <tr class="group-row">
-            <td class="text-center">5</td>
-            <td colspan="9">BELANJA PANITIA</td>
+            <td class="text-center col-center">5</td>
+            <td colspan="9" class="col-uraian-cell">BELANJA PANITIA</td>
         </tr>
         <tr>
-            <td class="text-center">5.1</td>
-            <td>Honorarium</td>
-            <td class="text-center">${panitia}</td><td class="text-center">Org</td>
-            <td class="text-center">${panitia > 0 ? 1 : 0}</td><td class="text-center">Keg</td>
-            <td class="text-center">${panitia}</td><td class="text-center">OK</td>
-            <td class="text-center"><input type="number" class="price-input" value="${tarif.panitia_honor}" onchange="ubahTarif('panitia_honor', this.value)"></td>
-            <td class="text-right"><b>Rp ${formatRupiah(c_pan_honor)}</b></td>
+            <td class="text-center col-center">5.1</td>
+            <td class="col-uraian-cell">Honorarium</td>
+            <td class="text-center col-center">${panitia}</td><td class="text-center col-center">Org</td>
+            <td class="text-center col-center">${panitia > 0 ? 1 : 0}</td><td class="text-center col-center">Keg</td>
+            <td class="text-center col-center">${panitia}</td><td class="text-center col-center">OK</td>
+            ${renderSelHarga('panitia_honor', tarif.panitia_honor)}
+            <td class="text-right col-jumlah-cell"><b>Rp ${formatRupiah(c_pan_honor)}</b></td>
         </tr>
         <tr>
-            <td class="text-center">5.2</td>
-            <td>Transportasi</td>
-            <td class="text-center">${panitia}</td><td class="text-center">Org</td>
-            <td class="text-center">${panitia > 0 ? 1 : 0}</td><td class="text-center">Kali</td>
-            <td class="text-center">${panitia}</td><td class="text-center">PP</td>
-            <td class="text-center"><input type="number" class="price-input" value="${tarif.panitia_trans}" onchange="ubahTarif('panitia_trans', this.value)"></td>
-            <td class="text-right"><b>Rp ${formatRupiah(c_pan_trans)}</b></td>
+            <td class="text-center col-center">5.2</td>
+            <td class="col-uraian-cell">Transportasi</td>
+            ${renderSelVol('pan_trans_org', volManual.pan_trans_org)}<td class="text-center col-center">Org</td>
+            <td class="text-center col-center">${pan_trans_kali}</td><td class="text-center col-center">Kali</td>
+            <td class="text-center col-center">${tot_pan_trans}</td><td class="text-center col-center">PP</td>
+            ${renderSelHarga('panitia_trans', tarif.panitia_trans)}
+            <td class="text-right col-jumlah-cell"><b>Rp ${formatRupiah(c_pan_trans)}</b></td>
         </tr>
         <tr>
-            <td class="text-center">5.3</td>
-            <td>Uang Hotel</td>
-            <td class="text-center">${panitia}</td><td class="text-center">Org</td>
-            <td class="text-center">1</td><td class="text-center">Malam</td>
-            <td class="text-center">${panitia * 1}</td><td class="text-center">OP</td>
-            <td class="text-center"><input type="number" class="price-input" value="${tarif.panitia_hotel_1hr}" onchange="ubahTarif('panitia_hotel_1hr', this.value)"></td>
-            <td class="text-right"><b>Rp ${formatRupiah(c_pan_hotel1)}</b></td>
+            <td class="text-center col-center">5.3</td>
+            <td class="col-uraian-cell">Uang Hotel</td>
+            ${renderSelVol('pan_hotel_org', volManual.pan_hotel_org)}<td class="text-center col-center">Org</td>
+            <td class="text-center col-center">1</td><td class="text-center col-center">Malam</td>
+            <td class="text-center col-center">${tot_pan_hotel1}</td><td class="text-center col-center">OP</td>
+            ${renderSelHarga('panitia_hotel_1hr', tarif.panitia_hotel_1hr)}
+            <td class="text-right col-jumlah-cell"><b>Rp ${formatRupiah(c_pan_hotel1)}</b></td>
         </tr>
         <tr>
-            <td class="text-center">5.4</td>
-            <td>Uang Harian</td>
-            <td class="text-center">${panitia}</td><td class="text-center">Org</td>
-            <td class="text-center">1</td><td class="text-center">Hari</td>
-            <td class="text-center">${panitia * 1}</td><td class="text-center">OH</td>
-            <td class="text-center"><input type="number" class="price-input" value="${tarif.panitia_harian_1hr}" onchange="ubahTarif('panitia_harian_1hr', this.value)"></td>
-            <td class="text-right"><b>Rp ${formatRupiah(c_pan_harian1)}</b></td>
+            <td class="text-center col-center">5.4</td>
+            <td class="col-uraian-cell">Uang Harian</td>
+            ${renderSelVol('pan_harian_org', volManual.pan_harian_org)}<td class="text-center col-center">Org</td>
+            <td class="text-center col-center">1</td><td class="text-center col-center">Hari</td>
+            <td class="text-center col-center">${tot_pan_harian1}</td><td class="text-center col-center">OH</td>
+            ${renderSelHarga('panitia_harian_1hr', tarif.panitia_harian_1hr)}
+            <td class="text-right col-jumlah-cell"><b>Rp ${formatRupiah(c_pan_harian1)}</b></td>
         </tr>
         <tr>
-            <td class="text-center">5.5</td>
-            <td>Uang Harian Fullboard</td>
-            <td class="text-center">${panitia}</td><td class="text-center">Org</td>
-            <td class="text-center">${hari}</td><td class="text-center">Hari</td>
-            <td class="text-center">${panitia * hari}</td><td class="text-center">OH</td>
-            <td class="text-center"><input type="number" class="price-input" value="${tarif.panitia_harian_fb}" onchange="ubahTarif('panitia_harian_fb', this.value)"></td>
-            <td class="text-right"><b>Rp ${formatRupiah(c_pan_harian_fb)}</b></td>
+            <td class="text-center col-center">5.5</td>
+            <td class="col-uraian-cell">Uang Harian Fullboard</td>
+            <td class="text-center col-center">${panitia}</td><td class="text-center col-center">Org</td>
+            <td class="text-center col-center">${hari}</td><td class="text-center col-center">Hari</td>
+            <td class="text-center col-center">${panitia * hari}</td><td class="text-center col-center">OH</td>
+            ${renderSelHarga('panitia_harian_fb', tarif.panitia_harian_fb)}
+            <td class="text-right col-jumlah-cell"><b>Rp ${formatRupiah(c_pan_harian_fb)}</b></td>
         </tr>
         <tr>
-            <td class="text-center">5.6</td>
-            <td>Paket Rapat Fullboard</td>
-            <td class="text-center">${panitia}</td><td class="text-center">Org</td>
-            <td class="text-center">${hari}</td><td class="text-center">Malam</td>
-            <td class="text-center">${panitia * hari}</td><td class="text-center">OP</td>
-            <td class="text-center"><input type="number" class="price-input" value="${tarif.panitia_hotel_fb}" onchange="ubahTarif('panitia_hotel_fb', this.value)"></td>
-            <td class="text-right"><b>Rp ${formatRupiah(c_pan_paket_fb)}</b></td>
+            <td class="text-center col-center">5.6</td>
+            <td class="col-uraian-cell">Paket Rapat Fullboard</td>
+            <td class="text-center col-center">${panitia}</td><td class="text-center col-center">Org</td>
+            <td class="text-center col-center">${hari}</td><td class="text-center col-center">Malam</td>
+            <td class="text-center col-center">${panitia * hari}</td><td class="text-center col-center">OP</td>
+            ${renderSelHarga('panitia_hotel_fb', tarif.panitia_hotel_fb)}
+            <td class="text-right col-jumlah-cell"><b>Rp ${formatRupiah(c_pan_paket_fb)}</b></td>
         </tr>
         <tr class="subtotal-row">
-            <td colspan="9" class="text-right">SUB TOTAL 5</td>
-            <td class="text-right">Rp ${formatRupiah(totalBelanjaPanitia)}</td>
+            <td colspan="9" class="text-right subtotal-label">SUB TOTAL 5</td>
+            <td class="text-right col-jumlah-cell">Rp ${formatRupiah(totalBelanjaPanitia)}</td>
         </tr>
 
         <tr class="group-row">
-            <td class="text-center">6</td>
-            <td colspan="9">BELANJA PESERTA</td>
+            <td class="text-center col-center">6</td>
+            <td colspan="9" class="col-uraian-cell">BELANJA PESERTA</td>
         </tr>
         <tr>
-            <td class="text-center">6.1</td>
-            <td>Transportasi</td>
-            <td class="text-center">${peserta}</td><td class="text-center">Org</td>
-            <td class="text-center">${peserta > 0 ? 1 : 0}</td><td class="text-center">Kali</td>
-            <td class="text-center">${peserta}</td><td class="text-center">PP</td>
-            <td class="text-center"><input type="number" class="price-input" value="${tarif.peserta_trans}" onchange="ubahTarif('peserta_trans', this.value)"></td>
-            <td class="text-right"><b>Rp ${formatRupiah(c_peserta_trans)}</b></td>
+            <td class="text-center col-center">6.1</td>
+            <td class="col-uraian-cell">Transportasi</td>
+            <td class="text-center col-center">${peserta}</td><td class="text-center col-center">Org</td>
+            <td class="text-center col-center">${peserta > 0 ? 1 : 0}</td><td class="text-center col-center">Kali</td>
+            <td class="text-center col-center">${peserta}</td><td class="text-center col-center">PP</td>
+            ${renderSelHarga('peserta_trans', tarif.peserta_trans)}
+            <td class="text-right col-jumlah-cell"><b>Rp ${formatRupiah(c_peserta_trans)}</b></td>
         </tr>
         <tr>
-            <td class="text-center">6.2</td>
-            <td>Uang Harian Fullboard</td>
-            <td class="text-center">${peserta}</td><td class="text-center">Org</td>
-            <td class="text-center">${hari}</td><td class="text-center">Hari</td>
-            <td class="text-center">${peserta * hari}</td><td class="text-center">OH</td>
-            <td class="text-center"><input type="number" class="price-input" value="${tarif.peserta_harian}" onchange="ubahTarif('peserta_harian', this.value)"></td>
-            <td class="text-right"><b>Rp ${formatRupiah(c_peserta_harian)}</b></td>
+            <td class="text-center col-center">6.2</td>
+            <td class="col-uraian-cell">Uang Harian Fullboard</td>
+            <td class="text-center col-center">${peserta}</td><td class="text-center col-center">Org</td>
+            <td class="text-center col-center">${hari}</td><td class="text-center col-center">Hari</td>
+            <td class="text-center col-center">${peserta * hari}</td><td class="text-center col-center">OH</td>
+            ${renderSelHarga('peserta_harian', tarif.peserta_harian)}
+            <td class="text-right col-jumlah-cell"><b>Rp ${formatRupiah(c_peserta_harian)}</b></td>
         </tr>
         <tr>
-            <td class="text-center">6.3</td>
-            <td>Paket Rapat Fullboard</td>
-            <td class="text-center">${peserta}</td><td class="text-center">Org</td>
-            <td class="text-center">${hari}</td><td class="text-center">Hari</td>
-            <td class="text-center">${peserta * hari}</td><td class="text-center">OP</td>
-            <td class="text-center"><input type="number" class="price-input" value="${tarif.peserta_hotel}" onchange="ubahTarif('peserta_hotel', this.value)"></td>
-            <td class="text-right"><b>Rp ${formatRupiah(c_peserta_hotel)}</b></td>
+            <td class="text-center col-center">6.3</td>
+            <td class="col-uraian-cell">Paket Rapat Fullboard</td>
+            <td class="text-center col-center">${peserta}</td><td class="text-center col-center">Org</td>
+            <td class="text-center col-center">${hari}</td><td class="text-center col-center">Hari</td>
+            <td class="text-center col-center">${peserta * hari}</td><td class="text-center col-center">OP</td>
+            ${renderSelHarga('peserta_hotel', tarif.peserta_hotel)}
+            <td class="text-right col-jumlah-cell"><b>Rp ${formatRupiah(c_peserta_hotel)}</b></td>
         </tr>
         <tr>
-            <td class="text-center">6.4</td>
-            <td>Honorarium Pembaca Doa</td>
-            <td class="text-center">${doa}</td><td class="text-center">Org</td>
-            <td class="text-center">1</td><td class="text-center">Keg</td>
-            <td class="text-center">${doa}</td><td class="text-center">OK</td>
-            <td class="text-center"><input type="number" class="price-input" value="${tarif.doa_honor}" onchange="ubahTarif('doa_honor', this.value)"></td>
-            <td class="text-right"><b>Rp ${formatRupiah(c_doa_honor)}</b></td>
+            <td class="text-center col-center">6.4</td>
+            <td class="col-uraian-cell">Honorarium Pembaca Doa</td>
+            <td class="text-center col-center">${doa}</td><td class="text-center col-center">Org</td>
+            <td class="text-center col-center">1</td><td class="text-center col-center">Keg</td>
+            <td class="text-center col-center">${doa}</td><td class="text-center col-center">OK</td>
+            ${renderSelHarga('doa_honor', tarif.doa_honor)}
+            <td class="text-right col-jumlah-cell"><b>Rp ${formatRupiah(c_doa_honor)}</b></td>
         </tr>
         <tr class="subtotal-row">
-            <td colspan="9" class="text-right">SUB TOTAL 6</td>
-            <td class="text-right">Rp ${formatRupiah(totalBelanjaPeserta)}</td>
+            <td colspan="9" class="text-right subtotal-label">SUB TOTAL 6</td>
+            <td class="text-right col-jumlah-cell">Rp ${formatRupiah(totalBelanjaPeserta)}</td>
         </tr>
 
         <tr class="group-row">
-            <td class="text-center">7</td>
-            <td colspan="9">BELANJA LAIN-LAIN</td>
+            <td class="text-center col-center">7</td>
+            <td colspan="9" class="col-uraian-cell">BELANJA LAIN-LAIN</td>
         </tr>
         <tr>
-            <td class="text-center">7.1</td>
-            <td>Belanja lain-lain</td>
-            <td class="text-center">1</td><td class="text-center">Ls</td>
-            <td class="text-center">-</td><td class="text-center">-</td>
-            <td class="text-center">1</td><td class="text-center">Paket</td>
-            <td class="text-center"><input type="number" id="input_lain_persen" class="price-input" value="${persenAktif}" min="0" max="25" oninput="ubahTarif('lain_persen', this.value)" style="width: 70px; display: inline-block;"></td>
-            <td class="text-right"><b>Rp ${formatRupiah(c_lain)}</b></td>
+            <td class="text-center col-center">7.1</td>
+            <td class="col-uraian-cell">Belanja lain-lain</td>
+            <td class="text-center col-center">1</td><td class="text-center col-center">Ls</td>
+            <td class="text-center col-center">-</td><td class="text-center col-center">-</td>
+            <td class="text-center col-center">1</td><td class="text-center col-center">Paket</td>
+            <td class="text-center col-harga-cell">
+                <input type="number" id="input_lain_persen" class="price-input screen-only-input" value="${persenAktif}" min="0" max="25" oninput="ubahTarif('lain_persen', this.value)" style="width: 70px; display: inline-block;">
+                <span class="print-only-val">${persenAktif}%</span>
+            </td>
+            <td class="text-right col-jumlah-cell"><b>Rp ${formatRupiah(c_lain)}</b></td>
         </tr>
 
         <tr class="total-row">
-            <td colspan="9" class="text-right">TOTAL RAB</td>
-            <td class="text-right" style="font-size: 14px;">Rp ${formatRupiah(grandTotal)}</td>
+            <td colspan="9" class="text-right total-label">TOTAL RAB</td>
+            <td class="text-right col-jumlah-cell" style="font-size: 14px;">Rp ${formatRupiah(grandTotal)}</td>
         </tr>
     `;
 
