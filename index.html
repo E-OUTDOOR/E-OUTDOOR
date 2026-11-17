@@ -227,6 +227,11 @@
             color: var(--text-muted);
         }
 
+        /* Bagian khusus yang hanya muncul saat dicetak */
+        .print-only-meta {
+            display: none;
+        }
+
         .table-responsive {
             width: 100%;
             overflow-x: auto;
@@ -351,8 +356,53 @@
             .container { border: none; padding: 0; max-width: 100%; box-shadow: none; background: white; }
             #page-title, #input-page, .top-bar-result, .action-bar { display: none !important; }
             #result-page { display: block !important; }
+            .rab-header-left { margin-bottom: 8px; }
             .rab-header-left h2 { color: black !important; }
-            .rab-header-left p { color: #333 !important; }
+            .rab-header-left p { color: #000 !important; }
+            
+            /* Styling Garis, Parameter, dan Proses Bisnis saat dicetak */
+            .print-only-meta {
+                display: block !important;
+                border-top: 2px solid #000;
+                padding-top: 8px;
+                margin-bottom: 12px;
+                color: #000;
+                font-size: 10px;
+            }
+            .print-meta-grid {
+                display: flex;
+                justify-content: space-between;
+                gap: 20px;
+            }
+            .print-meta-col {
+                flex: 1;
+            }
+            .print-meta-title {
+                font-weight: 700;
+                text-transform: uppercase;
+                margin-bottom: 4px;
+                font-size: 10px;
+                text-decoration: underline;
+            }
+            .print-param-table {
+                width: 100%;
+                min-width: unset !important;
+                border-collapse: collapse;
+                font-size: 10px;
+            }
+            .print-param-table td {
+                border: none !important;
+                padding: 1px 4px 1px 0 !important;
+                color: #000 !important;
+            }
+            .print-bp-list {
+                margin: 0;
+                padding-left: 16px;
+            }
+            .print-bp-list li {
+                margin-bottom: 2px;
+            }
+
             input::-webkit-outer-spin-button,
             input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
             input[type=number] { -moz-appearance: textfield; }
@@ -417,6 +467,68 @@
         <div class="rab-header-left">
             <h2>RENCANA ANGGARAN BIAYA (RAB)</h2>
             <p>Kegiatan : ..........................................</p>
+        </div>
+
+        <!-- Garis, Parameter (Termasuk PPTK & Moderator) & Proses Bisnis (Muncul saat Cetak) -->
+        <div class="print-only-meta">
+            <div class="print-meta-grid">
+                <div class="print-meta-col">
+                    <div class="print-meta-title">Parameter</div>
+                    <table class="print-param-table">
+<tr>
+                            <td>PPTK</td>
+                            <td>:</td>
+                            <td>1 Orang</td>
+                        </tr>
+
+ <tr>
+                            <td>Anggota / Panitia</td>
+                            <td>:</td>
+                            <td><span id="cetak_panitia">0</span> Orang</td>
+                        </tr>
+
+
+
+
+
+                        <tr>
+                            <td style="width: 130px;">Peserta</td>
+                            <td style="width: 10px;">:</td>
+                            <td><span id="cetak_peserta">0</span> Orang</td>
+                        </tr>
+                        <tr>
+                            <td>Pemateri</td>
+                            <td>:</td>
+                            <td><span id="cetak_pemateri">0</span> Orang</td>
+                        </tr>
+                       
+                        
+                        <tr>
+                            <td>Moderator / MC</td>
+                            <td>:</td>
+                            <td>1 Orang</td>
+                        </tr>
+                        <tr>
+                            <td>Durasi Pelatihan</td>
+                            <td>:</td>
+                            <td><span id="cetak_hari">0</span> Hari</td>
+                        </tr>
+                        <tr>
+                            <td>Total JP Pemateri</td>
+                            <td>:</td>
+                            <td><span id="cetak_jp">0</span> JP</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="print-meta-col">
+                    <div class="print-meta-title">Proses Bisnis</div>
+                    <ul class="print-bp-list">
+                        <li>PPTK konsultasi 2 hari</li>
+                        <li>PPTK & Anggota persiapan 1 hari</li>
+                        <li>Hari Kegiatan</li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
         <div class="table-responsive">
@@ -513,6 +625,13 @@ function prosesKeHalamanHasil() {
         alert("Mohon isi semua parameter terlebih dahulu!");
         return;
     }
+
+    // Mengisi nilai parameter ke tampilan cetak
+    document.getElementById('cetak_peserta').textContent = peserta;
+    document.getElementById('cetak_pemateri').textContent = pemateri;
+    document.getElementById('cetak_panitia').textContent = panitia;
+    document.getElementById('cetak_hari').textContent = hari;
+    document.getElementById('cetak_jp').textContent = jp;
 
     document.getElementById('page-title').style.display = 'none';
     document.getElementById('input-page').style.display = 'none';
